@@ -1,0 +1,38 @@
+server:
+  port: 9009
+
+spring:
+  # 应用名配置
+  application:
+    name: bolt-gateway
+#  profiles:
+    # 多环境配置
+#    active: ${env:local}
+  # 返回json的全局时间格式
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    serialization:
+      write-dates-as-timestamps: false
+    time-zone: GMT+8
+
+  cloud:
+  # 集成Nacos服务发现配置
+    nacos:
+      discovery:
+        server-addr: https://nacos.app.bigonelab.tech
+        username: develop
+        password: 5f9ncyzb6o3nf7en9
+        namespace: 417113a8-cffb-4591-bac7-f5770a71e130
+        enabled: true
+    gateway:
+      # 路由定义
+      routes:
+        - id: ec-service
+#          uri : http://localhost:7001
+          uri : lb://ec-service
+          predicates:
+            - Path=/ec-service/**
+
+ribbon:
+  ReadTimeout: 60000 # 处理请求的超时时间，默认为1秒
+  ConnectTimeout: 60000 # 连接建立的超时时长，默认1秒
